@@ -1,6 +1,7 @@
 package com.chess.engine.board;
 
 import com.chess.engine.pieces.Piece;
+import static com.chess.engine.board.Board.*;
 
 public abstract class Move {
     final Board board;

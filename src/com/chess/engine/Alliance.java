@@ -1,5 +1,7 @@
 package com.chess.engine;
 
+import com.chess.engine.player.Player;
+
 public enum Alliance {
     WHITE {
         @Override

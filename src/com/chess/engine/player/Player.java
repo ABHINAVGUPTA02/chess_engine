@@ -2,11 +2,14 @@ package com.chess.engine.player;
 
 import com.chess.engine.Alliance;
 import com.chess.engine.board.Board;
+import com.chess.engine.board.Move;
+import com.chess.engine.pieces.King;
 import com.chess.engine.pieces.Piece;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 public abstract class Player {
     protected final Board board;
@@ -106,5 +109,5 @@ public abstract class Player {
 
     public abstract Player getOpponent();
 
-    public abstract Collection<Move> calculatingKingCastles(Collection<Move> playerLegals,Collection<Move> opponentLegals);
+    public abstract Collection<Move> calculatingKingCastles(Collection<Move> playerLegals, Collection<Move> opponentLegals);
 }
