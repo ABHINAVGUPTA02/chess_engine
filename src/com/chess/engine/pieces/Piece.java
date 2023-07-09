@@ -1,5 +1,7 @@
 package com.chess.engine.pieces;
 
+import com.chess.engine.Alliance;
+
 import java.util.Collection;
 
 public abstract class Piece {

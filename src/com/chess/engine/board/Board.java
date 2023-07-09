@@ -1,5 +1,8 @@
 package com.chess.engine.board;
 
+import com.chess.engine.Alliance;
+import com.chess.engine.pieces.Piece;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -19,7 +22,7 @@ public class Board {
 
     private Board(final Builder builder){
         this.gameBoard = createGameBoard(builder);
-        this.whitePieces = calculateActivePieces(this.gameBoard,Alliance.WHITE);
+        this.whitePieces = calculateActivePieces(this.gameBoard, Alliance.WHITE);
         this.blackPieces = calculateActivePieces(this.gameBoard,Alliance.BLACK);
 
         final Collection<Move> whiteStandardLegalMoves = calculateLegalMoves(this.whitePieces);
