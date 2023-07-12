@@ -171,6 +171,38 @@ public class Table {
         }
     }
 
+    public static class MoveLog {
+        private final List<Move> moves;
+
+        MoveLog(){
+            this.moves = new ArrayList<>();
+        }
+
+        public List<Move> getMoves(){
+            return this.moves;
+        }
+
+        public void addMove(final Move move){
+            this.moves.add(move);
+        }
+
+        public int size(){
+            return this.moves.size();
+        }
+
+        public void clear(){
+            this.moves.clear();
+        }
+
+        public Move removeMove(int index){
+            return this.moves.remove(index);
+        }
+
+        public boolean removeMove(final Move move){
+            return this.moves.remove(move);
+        }
+    }
+
     private class TilePanel extends JPanel {
         private final int tileID;
 
@@ -198,8 +230,20 @@ public class Table {
                             }
                         }else{
                             destinationTile = chessBoard.getTile(tileID);
-                            final Move move = null;
+                            final Move move = Move.MoveFactory.createMove(chessBoard, sourceTile.getTileCoordinate(), destinationTile.getTileCoordinate());
+                            final MoveTransition transition = chessBoard.getCurrentPlayer().makeMove(move);
+                            if(transition.getMoveStatus().isDone()){
+                                chessBoard = transition.getTransitionBoard();
+                                //TODO add the move to the move log
+                                System.out.println("piece moved");
+                            }
+                            sourceTile = null;
+                            destinationTile = null;
+                            humanMovedPiece = null;
                         }
+                        SwingUtilities.invokeLater(() -> {
+                            boardPanel.drawBoard(chessBoard);
+                        });
                     }
                 }
 
@@ -288,37 +332,3 @@ public class Table {
         }
     }
 }
-
-
-//if(isRightMouseButton(e)){
-//        sourceTile = null;
-//        destinationTile = null;
-//        humanMovedPiece = null;
-//        }
-//        else if(isLeftMouseButton(e)) {
-//        if(sourceTile == null){
-//        //first click
-//        sourceTile = chessBoard.getTile(tileID);
-//        humanMovedPiece = sourceTile.getPiece();
-//        if(humanMovedPiece == null){
-//        sourceTile = null;
-//        }
-//        }
-//        else{
-//        //second click
-//        destinationTile = chessBoard.getTile(tileID);
-//final Move move = Move.MoveFactory.createMove(chessBoard, sourceTile.getTileCoordinate(), destinationTile.getTileCoordinate());
-//final MoveTransition transition = chessBoard.getCurrentPlayer().makeMove(move);
-//        if(transition.getMoveStatus().isDone()){
-//        chessBoard = transition.getTransitionBoard();
-//        //TODO add the move to the move log
-//        System.out.println("piece moved");
-//        }
-//        sourceTile = null;
-//        destinationTile = null;
-//        humanMovedPiece = null;
-//        }
-//        SwingUtilities.invokeLater(() -> {
-//        boardPanel.drawBoard(chessBoard);
-//        });
-//        }
