@@ -36,7 +36,7 @@ public class BlackPlayer extends Player{
     public Collection<Move> calculatingKingCastles(final Collection<Move> playerLegals, final Collection<Move> opponentLegals) {
         final List<Move> kingCastles = new ArrayList<>();
 
-        if(this.playerKing.isFirstMove() && (!this.isInCheck())){
+        if(this.playerKing != null && this.playerKing.isFirstMove() && (!this.isInCheck())){
             //Black king side castle
             if(!(this.board.getTile(5).isTileOccupied()) && !(this.board.getTile(6).isTileOccupied())){
                 final Tile rookTile = this.board.getTile(7);
@@ -59,7 +59,10 @@ public class BlackPlayer extends Player{
                     !this.board.getTile(2).isTileOccupied() &&
                     !this.board.getTile(3).isTileOccupied()){
                 final Tile rookTile = this.board.getTile(0);
-                if(rookTile.isTileOccupied() && rookTile.getPiece().isFirstMove()){
+                if(rookTile.isTileOccupied() && rookTile.getPiece().isFirstMove() &&
+                   Player.calculateAttacksOnTile(2,opponentLegals).isEmpty() &&
+                   Player.calculateAttacksOnTile(3,opponentLegals).isEmpty() &&
+                   rookTile.getPiece().getPieceType().isRook()){
                     //TODO add castle move
                     kingCastles.add(new Move.queenSideCastleMove(this.board,
                             this.playerKing,

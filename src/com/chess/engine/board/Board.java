@@ -114,7 +114,7 @@ public class Board {
     }
 
     private static List<Tile> createGameBoard(final Builder builder){
-        final List<Tile> tiles = new ArrayList<>(BoardUtils.NUM_TILES);
+        final List<Tile> tiles = new ArrayList<>();
         for(int i=0;i<BoardUtils.NUM_TILES;i++){
             tiles.add(Tile.createTile(i,builder.boardConfig.get(i)));
         }
@@ -163,7 +163,6 @@ public class Board {
 
         //set the move maker
         builder.setMoveMaker(Alliance.WHITE);
-
         return builder.build();
     }
 
@@ -200,7 +199,5 @@ public class Board {
         public void setEnPassantPawn(Pawn enPassantPawn) {
             this.enPassantPawn = enPassantPawn;
         }
-
-
     }
 }

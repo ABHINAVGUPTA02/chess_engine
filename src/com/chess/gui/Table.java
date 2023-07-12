@@ -55,7 +55,7 @@ public class Table {
                 System.exit(0);
             }
         });
-        
+
         fileMenu.add(openPGN);
         fileMenu.add(exitMenuItem);
         return fileMenu;
@@ -89,19 +89,18 @@ public class Table {
         }
 
         private void assignTileColor() {
-            if(BoardUtils.FIRST_ROW[this.tileID] ||
-               BoardUtils.THIRD_ROW[this.tileID] ||
-               BoardUtils.FIFTH_ROW[this.tileID] ||
-               BoardUtils.SEVENTH_ROW[this.tileID]){
+            if(BoardUtils.EIGHT_RANK[this.tileID] ||
+               BoardUtils.SIXTH_RANK[this.tileID] ||
+               BoardUtils.FOURTH_RANK[this.tileID] ||
+               BoardUtils.SECOND_RANK[this.tileID]){
                 setBackground(this.tileID%2 == 0? lightTileColor: darkTileColor);
             }
-            else if(BoardUtils.SECOND_ROW[this.tileID] ||
-                    BoardUtils.FOURTH_ROW[this.tileID] ||
-                    BoardUtils.SIXTH_ROW[this.tileID] ||
-                    BoardUtils.EIGHT_ROW[this.tileID]){
+            else if(BoardUtils.SEVENTH_RANK[this.tileID] ||
+                    BoardUtils.FIFTH_RANK[this.tileID] ||
+                    BoardUtils.THIRD_RANK[this.tileID] ||
+                    BoardUtils.FIRST_RANK[this.tileID]){
                 setBackground(this.tileID%2 == 1? lightTileColor: darkTileColor);
             }
         }
     }
-
 }
