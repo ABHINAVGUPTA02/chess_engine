@@ -17,10 +17,12 @@ import java.util.List;
 public class Table {
     private final JFrame gameFrame;
     private final BoardPanel boardPanel;
+    private final Board chessBoard;
 
     private static final Dimension OUTER_FRAME_DIMENSION = new Dimension(600,600);
     private static final Dimension BOARD_PANEL_DIMENSION = new Dimension(400,350);
     private static final Dimension TILE_PANEL_DIMENSION = new Dimension(10,10);
+    private static final String defaultPieceImagesPath = "art/pieces/plain/";
 
     private final Color lightTileColor = Color.decode("#FFFACD");
     private final Color darkTileColor = Color.decode("#593E1A");
@@ -28,11 +30,12 @@ public class Table {
     public Table(){
         this.gameFrame = new JFrame("Shatranj");
         this.gameFrame.setLayout(new BorderLayout());
-        this.boardPanel = new BoardPanel();
-        this.gameFrame.add(this.boardPanel,BorderLayout.CENTER);
         final JMenuBar tableMenuBar = createTableMenuBar();
         this.gameFrame.setJMenuBar(tableMenuBar);
         this.gameFrame.setSize(OUTER_FRAME_DIMENSION);
+        this.chessBoard = Board.createStandardBoard();
+        this.boardPanel = new BoardPanel();
+        this.gameFrame.add(this.boardPanel,BorderLayout.CENTER);
         this.gameFrame.setVisible(true);
     }
 
@@ -90,16 +93,16 @@ public class Table {
             this.tileID = tileID;
             setPreferredSize(TILE_PANEL_DIMENSION);
             assignTileColor();
+            assignTilePieceIcon(chessBoard);
             validate();
         }
 
         private void assignTilePieceIcon(final Board board){
             this.removeAll();
             if(board.getTile(this.tileID).isTileOccupied()) {
-                String pieceIconPath = "";
                 try {
                     final BufferedImage image =
-                            ImageIO.read(new File(pieceIconPath + board.getTile(this.tileID).getPiece().getPieceAlliance().toString().substring(0,1) +
+                            ImageIO.read(new File(defaultPieceImagesPath + board.getTile(this.tileID).getPiece().getPieceAlliance().toString().substring(0,1) +
                                     board.getTile(this.tileID).getPiece().toString() + ".gif"));
                             add(new JLabel(new ImageIcon(image)));
                 } catch (IOException e) {
