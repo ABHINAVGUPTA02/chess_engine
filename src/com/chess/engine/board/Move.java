@@ -95,6 +95,22 @@ public abstract class Move {
         return builder.build();
     }
 
+    public static class MajorAttackMove extends AttackMove{
+        public MajorAttackMove(final Board board,final Piece piece,final int destinationCoordinate, final Piece pieceAttacked){
+            super(board,piece,destinationCoordinate,pieceAttacked);
+        }
+
+        @Override
+        public boolean equals(final Object other){
+            return this == other || other instanceof MajorAttackMove && super.equals(other);
+        }
+
+        @Override
+        public String toString() {
+            return movedPiece.getPieceType() + BoardUtils.getPositionAtCoordinate(destinationCoordinate);
+        }
+    }
+
     public static final class MajorMove extends Move{
 
         public MajorMove(final Board board,final Piece piece,final int destinationCoordinate) {
@@ -110,7 +126,6 @@ public abstract class Move {
         public String toString() {
             return movedPiece.getPieceType().toString() + BoardUtils.getPositionAtCoordinate(this.destinationCoordinate);
         }
-
     }
 
     public static class AttackMove extends Move{
@@ -137,11 +152,6 @@ public abstract class Move {
         }
 
         @Override
-        public Board execute() {
-            return null;
-        }
-
-        @Override
         public boolean isAttack(){
             return true;
         }
@@ -159,6 +169,15 @@ public abstract class Move {
             super(board, piece, destinationCoordinate);
         }
 
+        @Override
+        public boolean equals(final Object other){
+            return this == other || other instanceof pawnMove && super.equals(other);
+        }
+
+        @Override
+        public String toString() {
+            return BoardUtils.getPositionAtCoordinate(this.destinationCoordinate);
+        }
     }
 
 
@@ -168,12 +187,47 @@ public abstract class Move {
             super(board, piece, destinationCoordinate,attackedPiece);
         }
 
+        @Override
+        public boolean equals(final Object other){
+            return this == other || other instanceof pawnAttackMove && super.equals(other);
+        }
+
+        @Override
+        public String toString() {
+            return BoardUtils.getPositionAtCoordinate(this.movedPiece.getPiecePosition()).substring(0,1) + "x" +
+                   BoardUtils.getPositionCoordinate(this.destinationCoordinate);
+        }
+
     }
 
-    public static final class pawnEnPassantMove extends pawnAttackMove{
+    public static final class pawnEnPassantAttackMove extends pawnAttackMove{
 
-        public pawnEnPassantMove(final Board board,final Piece piece,final int destinationCoordinate,final Piece attackedPiece) {
+        public pawnEnPassantAttackMove(final Board board,final Piece piece,final int destinationCoordinate,final Piece attackedPiece) {
             super(board, piece, destinationCoordinate,attackedPiece);
+        }
+
+        @Override
+        public boolean equals(final Object other){
+            return this == other || other instanceof pawnEnPassantAttackMove && super.equals(other);
+        }
+
+        @Override
+        public Board execute() {
+            final Builder builder = new Builder();
+            for(final Piece piece : this.board.getCurrentPlayer().getActivePieces()){
+                if(!this.movedPiece.equals(piece)){
+                    builder.setPiece(piece);
+                }
+            }
+
+            for(final Piece piece : this.board.getCurrentPlayer().getOpponent().getActivePieces()){
+                if(!piece.equals(this.getAttackedPiece())){
+                    builder.setPiece(piece);
+                }
+            }
+            builder.setPiece(this.movedPiece.movedPiece(this));
+            builder.setMoveMaker(this.board.getCurrentPlayer().getOpponent().getAlliance());
+            return builder.build();
         }
 
     }
@@ -250,12 +304,38 @@ public abstract class Move {
             return builder.build();
         }
 
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = super.hashCode();
+            result = prime * result + this.castleRook.hashCode();
+            result = prime * result + this.castleRookDestination;
+            return result;
+        }
+
+        @Override
+        public boolean equals(final Object other){
+            if(this == other) return true;
+
+            if(!(other instanceof castleMove)){
+                return false;
+            }
+
+            final castleMove otherCastleMove = (castleMove) other;
+            return super.equals(otherCastleMove) && this.castleRook.equals(otherCastleMove.getCastleRook());
+        }
+
     }
 
     public static final class kingSideCastleMove extends castleMove{
 
         public kingSideCastleMove(final Board board,final Piece piece,final int destinationCoordinate,final Rook castleRook,final int castleRookStart,final int castleRookDestination) {
             super(board, piece, destinationCoordinate, castleRook, castleRookStart, castleRookDestination);
+        }
+
+        @Override
+        public boolean equals(final Object other){
+            return this == other || other instanceof kingSideCastleMove && super.equals(other);
         }
 
         @Override
@@ -271,6 +351,11 @@ public abstract class Move {
         }
 
         @Override
+        public boolean equals(final Object other){
+            return this == other || this instanceof queenSideCastleMove && super.equals(other);
+        }
+
+        @Override
         public String toString(){
             return "O-O-O";
         }
@@ -279,14 +364,18 @@ public abstract class Move {
     public static final class nullMove extends Move{
 
         public nullMove() {
-            super(null, -1);
+            super(null, 65);
         }
 
         @Override
         public Board execute(){
-            throw new RuntimeException("Cannot execute a null move1");
+            throw new RuntimeException("Cannot execute a null move!");
         }
 
+        @Override
+        public int getCurrentCoordinate() {
+            return -1;
+        }
     }
 
     public static class MoveFactory{
