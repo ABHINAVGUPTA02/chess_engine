@@ -181,7 +181,7 @@ public abstract class Move {
     }
 
 
-    public static class pawnAttackMove extends AttackMove{
+    public static class pawnAttackMove extends MajorAttackMove{
 
         public pawnAttackMove(final Board board,final Piece piece,final int destinationCoordinate,final Piece attackedPiece) {
             super(board, piece, destinationCoordinate,attackedPiece);
