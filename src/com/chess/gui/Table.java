@@ -27,8 +27,11 @@ import static javax.swing.SwingUtilities.isRightMouseButton;
 
 public class Table {
     private final JFrame gameFrame;
+    private final GameHistoryPanel gameHistoryPanel;
+    private final TakenPiecesPanel takenPiecesPanel;
     private final BoardPanel boardPanel;
     private Board chessBoard;
+    private final MoveLog moveLog;
 
     private Tile sourceTile;
     private Tile destinationTile;
@@ -37,7 +40,7 @@ public class Table {
 
     private Boolean highlightLegalMoves;
 
-    private static final Dimension OUTER_FRAME_DIMENSION = new Dimension(600,600);
+    private static final Dimension OUTER_FRAME_DIMENSION = new Dimension(650,650);
     private static final Dimension BOARD_PANEL_DIMENSION = new Dimension(400,350);
     private static final Dimension TILE_PANEL_DIMENSION = new Dimension(10,10);
     private static final String defaultPieceImagesPath = "art/pieces/plain/";
@@ -52,10 +55,15 @@ public class Table {
         this.gameFrame.setJMenuBar(tableMenuBar);
         this.gameFrame.setSize(OUTER_FRAME_DIMENSION);
         this.chessBoard = Board.createStandardBoard();
+        this.gameHistoryPanel = new GameHistoryPanel();
+        this.takenPiecesPanel = new TakenPiecesPanel();
         this.boardPanel = new BoardPanel();
+        this.moveLog = new MoveLog();
         this.boardDirection = BoardDirection.NORMAL;
         this.highlightLegalMoves = false;
-        this.gameFrame.add(this.boardPanel,BorderLayout.CENTER);
+        this.gameFrame.add(this.takenPiecesPanel, BorderLayout.WEST);
+        this.gameFrame.add(this.boardPanel, BorderLayout.CENTER);
+        this.gameFrame.add(this.gameHistoryPanel, BorderLayout.EAST);
         this.gameFrame.setVisible(true);
     }
 
@@ -234,6 +242,7 @@ public class Table {
                             final MoveTransition transition = chessBoard.getCurrentPlayer().makeMove(move);
                             if(transition.getMoveStatus().isDone()){
                                 chessBoard = transition.getTransitionBoard();
+                                moveLog.addMove(move);
                                 //TODO add the move to the move log
                                 System.out.println("piece moved");
                             }
@@ -241,8 +250,13 @@ public class Table {
                             destinationTile = null;
                             humanMovedPiece = null;
                         }
-                        SwingUtilities.invokeLater(() -> {
-                            boardPanel.drawBoard(chessBoard);
+                        SwingUtilities.invokeLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                gameHistoryPanel.redo(chessBoard, moveLog);
+                                takenPiecesPanel.redo(moveLog);
+                                boardPanel.drawBoard(chessBoard);
+                            }
                         });
                     }
                 }

@@ -21,7 +21,8 @@ public class GameHistoryPanel extends JPanel {
         this.model = new DataModel();
         final JTable table = new JTable(model);
         table.setRowHeight(15);
-        this.scrollPane = new JScrollPane(table.getTableHeader());
+        this.scrollPane = new JScrollPane(table);
+        scrollPane.setColumnHeaderView(table.getTableHeader());
         scrollPane.setPreferredSize(HISTORY_PANEL_DISCUSSION);
         this.add(scrollPane,BorderLayout.CENTER);
         this.setVisible(true);
@@ -45,7 +46,9 @@ public class GameHistoryPanel extends JPanel {
             final String moveText = lastMove.toString();
 
             if(lastMove.getMovedPiece().getPieceAlliance().isWhite()){
-                this.model.setValueAt(moveText + calculateCheckAndCheckMateHash(board), currentRow - 1,1);
+                this.model.setValueAt(moveText + calculateCheckAndCheckMateHash(board), currentRow,0);
+            }else if(lastMove.getMovedPiece().getPieceAlliance().isBlack()){
+                this.model.setValueAt(moveText + calculateCheckAndCheckMateHash(board), currentRow-1,1);
             }
         }
 
@@ -114,8 +117,9 @@ public class GameHistoryPanel extends JPanel {
 
             if(column == 0){
                 currentRow.setWhiteMove((String) aValue);
+                fireTableRowsInserted(row,row);
             }else if(column == 1){
-                currentRow.setBlackMove((String) aValue);
+                currentRow.setBlackMove((String)aValue);
                 fireTableCellUpdated(row,column);
             }
         }
