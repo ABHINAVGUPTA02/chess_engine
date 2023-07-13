@@ -24,12 +24,6 @@ public class Pawn extends Piece {
     }
 
     @Override
-    public Pawn movedPiece(final Move move) {
-        return new Pawn(move.getDestinationCoordinate(),move.getMovedPiece().getPieceAlliance());
-    }
-
-
-    @Override
     public Collection<Move> calculateLegalMoves(final Board board) {
         final List<Move> LegalMoves = new ArrayList<>();
 
@@ -41,8 +35,11 @@ public class Pawn extends Piece {
             }
 
             if (currentCandidateOffset == 8 && !board.getTile(candidateDestinationCoordinate).isTileOccupied()) {
-                //TODO more work here (deal with promotions)!!!
-                LegalMoves.add(new pawnMove(board, this, candidateDestinationCoordinate));
+                if(this.pieceAlliance.isPawnPromotionSquare(candidateDestinationCoordinate)){
+                    LegalMoves.add(new pawnPromotion(board,this,candidateDestinationCoordinate));
+                }else{
+                    LegalMoves.add(new pawnMove(board, this, candidateDestinationCoordinate));
+                }
             } else if (currentCandidateOffset == 16 && this.isFirstMove() &&
                       ((BoardUtils.SEVENTH_RANK[this.piecePosition] && this.getPieceAlliance().isBlack()) ||
                       (BoardUtils.SECOND_RANK[this.piecePosition] && this.getPieceAlliance().isWhite()))) {
@@ -59,7 +56,19 @@ public class Pawn extends Piece {
                     final Piece pieceOnCandidate = board.getTile(candidateDestinationCoordinate).getPiece();
                     if (this.getPieceAlliance() != pieceOnCandidate.getPieceAlliance()) {
                         //TODO more work to do here
-                        LegalMoves.add(new pawnAttackMove(board, this, candidateDestinationCoordinate,pieceOnCandidate));
+                        if(this.pieceAlliance.isPawnPromotionSquare(candidateDestinationCoordinate)){
+                            LegalMoves.add(new pawnPromotion(board,this,candidateDestinationCoordinate));
+                        }
+                        else{
+                            LegalMoves.add(new pawnAttackMove(board, this, candidateDestinationCoordinate,pieceOnCandidate));
+                        }
+                    }
+                }else if(board.getEnPassantPawn() != null){
+                    if(board.getEnPassantPawn().getPiecePosition() == (this.piecePosition + (this.pieceAlliance.getOppositeDirection()))) {
+                        final Piece pieceOnCandidate = board.getEnPassantPawn();
+                        if(this.pieceAlliance != pieceOnCandidate.getPieceAlliance()) {
+                                LegalMoves.add(new pawnEnPassantAttackMove(board,this,candidateDestinationCoordinate,pieceOnCandidate));
+                        }
                     }
                 }
             } else if (currentCandidateOffset == 9 &&
@@ -68,8 +77,19 @@ public class Pawn extends Piece {
                 if (board.getTile(candidateDestinationCoordinate).isTileOccupied()) {
                     final Piece pieceOnCandidate = board.getTile(candidateDestinationCoordinate).getPiece();
                     if (this.getPieceAlliance() != pieceOnCandidate.getPieceAlliance()) {
-                        //TODO more work to do here
-                        LegalMoves.add(new pawnAttackMove(board, this, candidateDestinationCoordinate,pieceOnCandidate));
+                        if(this.pieceAlliance.isPawnPromotionSquare(candidateDestinationCoordinate)){
+                            LegalMoves.add(new pawnPromotion(board,this,candidateDestinationCoordinate));
+                        }
+                        else {
+                            LegalMoves.add(new pawnAttackMove(board, this, candidateDestinationCoordinate,pieceOnCandidate));
+                        }
+                    }
+                }else if(board.getEnPassantPawn() != null){
+                    if(board.getEnPassantPawn().getPiecePosition() == (this.piecePosition -  (this.pieceAlliance.getOppositeDirection()))) {
+                        final Piece pieceOnCandidate = board.getEnPassantPawn();
+                        if(this.pieceAlliance != pieceOnCandidate.getPieceAlliance()) {
+                            LegalMoves.add(new pawnEnPassantAttackMove(board,this,candidateDestinationCoordinate,pieceOnCandidate));
+                        }
                     }
                 }
             }
@@ -79,8 +99,17 @@ public class Pawn extends Piece {
     }
 
     @Override
+    public Pawn movedPiece(final Move move) {
+        return new Pawn(move.getDestinationCoordinate(),move.getMovedPiece().getPieceAlliance());
+    }
+
+    @Override
     public String toString(){
         return PieceType.PAWN.toString();
+    }
+
+    public Piece getPromotionPiece() {
+        return new Queen(this.piecePosition, this.pieceAlliance,  false);
     }
 }
 
