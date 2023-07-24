@@ -36,7 +36,7 @@ public class Pawn extends Piece {
 
             if (currentCandidateOffset == 8 && !board.getTile(candidateDestinationCoordinate).isTileOccupied()) {
                 if(this.pieceAlliance.isPawnPromotionSquare(candidateDestinationCoordinate)){
-                    LegalMoves.add(new pawnPromotion(board,this,candidateDestinationCoordinate));
+                    LegalMoves.add(new pawnPromotion(new pawnMove(board,this,candidateDestinationCoordinate)));
                 }else{
                     LegalMoves.add(new pawnMove(board, this, candidateDestinationCoordinate));
                 }
@@ -57,7 +57,7 @@ public class Pawn extends Piece {
                     if (this.getPieceAlliance() != pieceOnCandidate.getPieceAlliance()) {
                         //TODO more work to do here
                         if(this.pieceAlliance.isPawnPromotionSquare(candidateDestinationCoordinate)){
-                            LegalMoves.add(new pawnPromotion(board,this,candidateDestinationCoordinate));
+                            LegalMoves.add(new pawnPromotion(new pawnAttackMove(board,this,candidateDestinationCoordinate,pieceOnCandidate)));
                         }
                         else{
                             LegalMoves.add(new pawnAttackMove(board, this, candidateDestinationCoordinate,pieceOnCandidate));
@@ -78,7 +78,7 @@ public class Pawn extends Piece {
                     final Piece pieceOnCandidate = board.getTile(candidateDestinationCoordinate).getPiece();
                     if (this.getPieceAlliance() != pieceOnCandidate.getPieceAlliance()) {
                         if(this.pieceAlliance.isPawnPromotionSquare(candidateDestinationCoordinate)){
-                            LegalMoves.add(new pawnPromotion(board,this,candidateDestinationCoordinate));
+                            LegalMoves.add(new pawnPromotion(new pawnAttackMove(board,this,candidateDestinationCoordinate,pieceOnCandidate)));
                         }
                         else {
                             LegalMoves.add(new pawnAttackMove(board, this, candidateDestinationCoordinate,pieceOnCandidate));

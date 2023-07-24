@@ -57,7 +57,6 @@ public abstract class Move {
         return this.board;
     }
 
-
     public int getCurrentCoordinate(){
         return this.movedPiece.getPiecePosition();
     }
@@ -240,7 +239,7 @@ public abstract class Move {
     public static class pawnPromotion extends Move{
 
         final Move decoratedMove;
-        final Piece promotedPawn;
+        final Pawn promotedPawn;
 
         public pawnPromotion(final Move decoratedMove){
             super(decoratedMove.getBoard(),decoratedMove.getMovedPiece(), decoratedMove.getDestinationCoordinate());
@@ -255,7 +254,7 @@ public abstract class Move {
 
         @Override
         public boolean equals(final Object other){
-            return this == other || other instanceof  pawnPromotion && (super.equals(other));
+            return this == other || other instanceof pawnPromotion && (super.equals(other));
         }
 
         @Override
@@ -270,7 +269,7 @@ public abstract class Move {
             for(final Piece piece: pawnMoveBoard.getCurrentPlayer().getOpponent().getActivePieces()){
                 builder.setPiece(piece);
             }
-            builder.setPiece(this.promotedPawn.getPromotionPiece().movePiece(this));
+            builder.setPiece(this.promotedPawn.getPromotionPiece().movedPiece(this));
             builder.setMoveMaker(pawnMoveBoard.getCurrentPlayer().getAlliance());
             return builder.build();
         }

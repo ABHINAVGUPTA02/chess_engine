@@ -148,4 +148,9 @@ public abstract class Piece {
 
         public abstract boolean isRook();
     }
+
+    public Piece getPromotionPiece() {
+        return new Queen(this.piecePosition, this.pieceAlliance,  false);
+    }
+
 }
