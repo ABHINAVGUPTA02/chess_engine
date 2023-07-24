@@ -199,7 +199,7 @@ public abstract class Move {
         @Override
         public String toString() {
             return BoardUtils.getPositionAtCoordinate(this.movedPiece.getPiecePosition()).substring(0,1) + "x" +
-                   BoardUtils.getPositionCoordinate(this.destinationCoordinate);
+                   BoardUtils.getPositionAtCoordinate(this.destinationCoordinate);
         }
 
     }

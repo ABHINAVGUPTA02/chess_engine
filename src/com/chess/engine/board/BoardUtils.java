@@ -76,7 +76,7 @@ public class BoardUtils {
         return (coordinate >= 0 && coordinate < NUM_TILES);
     }
 
-    public static int getPositionCoordinate(final int position) {
+    public static int getCoordinateAtPosition(final String position) {
         return POSITION_TO_COORDINATE.get(position);
     }
 
