@@ -72,9 +72,16 @@ public abstract class Player {
         return !this.isInCheck && !hasEscapeMoves();
     }
 
-    //TODO implement these methods
     public boolean isCastled(){
         return false;
+    }
+
+    public boolean isKingSideCastleCapable() {
+        return this.playerKing.isKingSideCastleCapable();
+    }
+
+    public boolean isQueenSideCastleCapable() {
+        return this.playerKing.isQueenSideCastleCapable();
     }
 
     protected boolean hasEscapeMoves() {

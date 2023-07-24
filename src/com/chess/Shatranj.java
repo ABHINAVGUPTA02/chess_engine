@@ -1,7 +1,6 @@
 package com.chess;
 
 import com.chess.engine.board.Board;
-import com.chess.engine.player.WhitePlayer;
 import com.chess.gui.Table;
 
 public class Shatranj {
